@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Semaforo from './components/Semaforo'
 import './App.css'
 
@@ -18,6 +18,10 @@ export default function App() {
   // Estado opcional para exibir/ocultar a colinha com as explicações conceituais
   const [mostrarExplicacao, setMostrarExplicacao] = useState(false)
 
+  // NOVO: Estados para o Modo Automático (ativo por padrão para mudar sozinho)
+  const [modoAutomatico, setModoAutomatico] = useState(true)
+  const [intervaloSegundos, setIntervaloSegundos] = useState(3)
+
   // 2. LÓGICA DE TRANSIÇÃO:
   // Sequência do desafio: 🔴 Vermelho → 🟢 Verde → 🟡 Amarelo → 🔴 Vermelho
   const proximaLuz = () => {
@@ -29,6 +33,23 @@ export default function App() {
       setLuzAtiva('vermelho')
     }
   }
+
+  // NOVO: Efeito para alternar as cores automaticamente no intervalo definido
+  useEffect(() => {
+    if (!modoAutomatico) return
+
+    const timer = setTimeout(() => {
+      if (luzAtiva === 'vermelho') {
+        setLuzAtiva('verde')
+      } else if (luzAtiva === 'verde') {
+        setLuzAtiva('amarelo')
+      } else {
+        setLuzAtiva('vermelho')
+      }
+    }, intervaloSegundos * 1000)
+
+    return () => clearTimeout(timer)
+  }, [luzAtiva, modoAutomatico, intervaloSegundos])
 
   // 3. DESAFIO EXTRA: Dicionário com informações da mensagem de trânsito
   const significados = {
@@ -134,6 +155,53 @@ export default function App() {
               >
                 🟢 Verde
               </button>
+            </div>
+          </div>
+
+          {/* NOVO: Painel do Modo Automático */}
+          <div className="secao-modo-automatico">
+            <div className="cabecalho-automatico">
+              <h3 className="titulo-secao">
+                ⏱️ Ciclo Automático
+              </h3>
+              <span className={`status-badge-auto ${modoAutomatico ? 'ativo' : 'pausado'}`}>
+                <span className="ponto-pulsante" />
+                {modoAutomatico ? `Ativo (${intervaloSegundos}s)` : 'Pausado'}
+              </span>
+            </div>
+
+            {modoAutomatico && (
+              <div className="barra-progresso-container">
+                <div
+                  key={`${luzAtiva}-${intervaloSegundos}`}
+                  className={`barra-progresso-fill progresso-${luzAtiva}`}
+                  style={{ animationDuration: `${intervaloSegundos}s` }}
+                />
+              </div>
+            )}
+
+            <div className="controles-automatico">
+              <button
+                type="button"
+                className={`btn-auto-toggle ${modoAutomatico ? 'ativo' : ''}`}
+                onClick={() => setModoAutomatico(!modoAutomatico)}
+              >
+                {modoAutomatico ? '⏸️ Pausar Automático' : '▶️ Ativar Automático'}
+              </button>
+
+              <div className="seletor-tempo">
+                {[1, 2, 3, 5].map((seg) => (
+                  <button
+                    key={seg}
+                    type="button"
+                    className={`btn-tempo ${intervaloSegundos === seg ? 'selecionado' : ''}`}
+                    onClick={() => setIntervaloSegundos(seg)}
+                    title={`Mudar a cada ${seg} segundo(s)`}
+                  >
+                    {seg}s
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
