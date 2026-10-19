@@ -1,0 +1,533 @@
+/* ==========================================================================
+   LAYOUT PRINCIPAL
+   ========================================================================== */
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================================================
+   CABEÇALHO
+   ========================================================================== */
+
+.app-header {
+  text-align: center;
+}
+
+.badge-tag {
+  display: inline-block;
+  padding: 4px 14px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.app-header h1 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.subtitulo {
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+.subtitulo strong {
+  color: #e2e8f0;
+}
+
+/* ==========================================================================
+   GRID PRINCIPAL (Semáforo + Controles)
+   ========================================================================== */
+
+.painel-principal {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 36px;
+  align-items: center;
+  background: rgba(13, 17, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+@media (max-width: 768px) {
+  .painel-principal {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 24px 16px;
+  }
+}
+
+/* ==========================================================================
+   SEMÁFORO REALISTA
+   ========================================================================== */
+
+.coluna-semaforo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.semaforo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+/* Carcaça preta do semáforo */
+.semaforo-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: linear-gradient(145deg, #1f232b, #12151b);
+  border: 3px solid #2e3540;
+  border-radius: 36px;
+  padding: 24px 20px;
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.8),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 2;
+}
+
+/* Pequena viseira/aba sobre cada lâmpada */
+.slot-luz {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pestana {
+  width: 70px;
+  height: 10px;
+  background: linear-gradient(180deg, #2b313c, #161a22);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  margin-bottom: -4px;
+  z-index: 3;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Poste de metal */
+.semaforo-poste {
+  width: 22px;
+  height: 60px;
+  background: linear-gradient(90deg, #374151 0%, #6b7280 50%, #1f2937 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  margin-top: -2px;
+  z-index: 1;
+}
+
+.semaforo-base {
+  width: 90px;
+  height: 12px;
+  background: linear-gradient(90deg, #1f2937, #4b5563, #111827);
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* ==========================================================================
+   LÂMPADAS (Componente Luz)
+   ========================================================================== */
+
+.luz {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  border: 4px solid #1a1e24;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+/* Reflexo sutil de lente */
+.brilho-lente {
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  width: 44px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  transform: rotate(-25deg);
+  pointer-events: none;
+}
+
+/* --- Vermelho --- */
+.luz-vermelho {
+  background: radial-gradient(circle at 35% 35%, #4a151b, #1f080a);
+  border-color: #2b1013;
+  opacity: 0.45;
+}
+
+.luz-vermelho.ativa {
+  background: radial-gradient(circle at 40% 40%, #ff6b7b 0%, #ff1f38 50%, #b80016 100%);
+  border-color: #ff8594;
+  opacity: 1;
+  box-shadow:
+    0 0 25px rgba(255, 31, 56, 0.9),
+    0 0 55px rgba(255, 31, 56, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+/* --- Amarelo --- */
+.luz-amarelo {
+  background: radial-gradient(circle at 35% 35%, #473a10, #1f1906);
+  border-color: #2b2308;
+  opacity: 0.45;
+}
+
+.luz-amarelo.ativa {
+  background: radial-gradient(circle at 40% 40%, #fff085 0%, #ffcc00 50%, #c49500 100%);
+  border-color: #fff4a3;
+  opacity: 1;
+  box-shadow:
+    0 0 25px rgba(255, 204, 0, 0.9),
+    0 0 55px rgba(255, 204, 0, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+/* --- Verde --- */
+.luz-verde {
+  background: radial-gradient(circle at 35% 35%, #0f3d23, #06190e);
+  border-color: #0b2415;
+  opacity: 0.45;
+}
+
+.luz-verde.ativa {
+  background: radial-gradient(circle at 40% 40%, #68f0a0 0%, #00d659 50%, #008f3a 100%);
+  border-color: #8affb7;
+  opacity: 1;
+  box-shadow:
+    0 0 25px rgba(0, 214, 89, 0.9),
+    0 0 55px rgba(0, 214, 89, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+/* ==========================================================================
+   COLUNA DE CONTROLES
+   ========================================================================== */
+
+.coluna-controles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Card de Status Dinâmico */
+.card-status {
+  padding: 18px 22px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.status-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.status-icone {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.status-rotulo {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  display: block;
+}
+
+.status-acao {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.status-descricao {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* Variantes de cores do Card de Status */
+.card-status.status-pare {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.card-status.status-pare .status-acao {
+  color: #ef4444;
+}
+
+.card-status.status-atencao {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.4);
+  color: #fde047;
+}
+
+.card-status.status-atencao .status-acao {
+  color: #eab308;
+}
+
+.card-status.status-siga {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #86efac;
+}
+
+.card-status.status-siga .status-acao {
+  color: #22c55e;
+}
+
+/* Botão Principal de Ciclo */
+.grupo-acao-principal {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-mudar-ciclo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(29, 78, 216, 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-mudar-ciclo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(29, 78, 216, 0.5);
+  background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
+}
+
+.btn-mudar-ciclo:active {
+  transform: translateY(1px);
+}
+
+.btn-icone {
+  font-size: 1.5rem;
+}
+
+.btn-texto {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.btn-dica {
+  font-size: 0.78rem;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+/* Botões de Seleção Direta */
+.secao-selecao-direta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.titulo-secao {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.botoes-cores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.btn-cor {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(30, 41, 59, 0.7);
+  color: #e2e8f0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cor:hover {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-cor.selecionado.btn-vermelho {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #fca5a5;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-cor.selecionado.btn-amarelo {
+  background: rgba(234, 179, 8, 0.2);
+  border-color: #eab308;
+  color: #fde047;
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.3);
+}
+
+.btn-cor.selecionado.btn-verde {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #22c55e;
+  color: #86efac;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+}
+
+/* Botão Toggle do Guia */
+.btn-toggle-guia {
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #38bdf8;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-guia:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+/* ==========================================================================
+   PAINEL DIDÁTICO (Perguntas e Respostas)
+   ========================================================================== */
+
+.painel-didatico {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 18px;
+  padding: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.painel-didatico h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.grid-perguntas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .grid-perguntas {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-pergunta {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+}
+
+.numero-pergunta {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: rgba(56, 189, 248, 0.3);
+}
+
+.card-pergunta h4 {
+  font-size: 0.95rem;
+  color: #f1f5f9;
+  margin-bottom: 8px;
+  padding-right: 24px;
+}
+
+.card-pergunta p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+.card-pergunta code {
+  background: rgba(15, 23, 42, 0.8);
+  padding: 2px 5px;
+  border-radius: 4px;
+  color: #38bdf8;
+  font-family: monospace;
+  font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   RODAPÉ
+   ========================================================================== */
+
+.app-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 16px;
+}
